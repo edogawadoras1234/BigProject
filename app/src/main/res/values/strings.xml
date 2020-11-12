@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">BigProject</string>
+    <string name="name">Name</string>
+    <string name="date">Date</string>
+    <string name="image_descrep">Image Descreption</string>
+    <string name="search">Tìm</string>
+    <string name="edit_text_hint">Nhập tên</string>
+    <string name="first_new">Mới Nhất</string>
+</resources>
