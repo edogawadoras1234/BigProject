@@ -9,6 +9,7 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:usesCleartextTraffic="${cleartextTrafficPermitted}"
         android:theme="@style/Theme.BigProject">
         <activity android:name=".ui.main.MainActivity">
             <intent-filter>

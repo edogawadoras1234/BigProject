@@ -11,10 +11,11 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class ApiClient {
-    public static final String BASE_URL = "https://5fabdead03a60500167e7324.mockapi.io/projectdemo/v1/";//Có thể thay base_url bằng link của nơi get API
+    public static final String BASE_URL = "http://5fad3d812ec98b00160480ff.mockapi.io/";//Có thể thay base_url bằng link của nơi get API
     public static Retrofit retrofit;
 
     public static Retrofit getApiClient() {
@@ -23,6 +24,7 @@ public class ApiClient {
             retrofit = new Retrofit.Builder()
                     .baseUrl(BASE_URL)
                     .client(getUnsafeOkHttpClient().build())
+                    .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                     .addConverterFactory(GsonConverterFactory.create())
                     .build();
 

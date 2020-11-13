@@ -1,13 +1,13 @@
 package com.example.bigproject.db.database;
 
-public class User {
-    String id, name, avatar, createAt;
+public class ImageDetailData {
+    String id, name, avatar, date;
 
-    public User(String id, String name, String avatar, String createAt) {
+    public ImageDetailData(String id, String name, String date, String avatar) {
         this.id = id;
         this.name = name;
         this.avatar = avatar;
-        this.createAt = createAt;
+        this.date = date;
     }
 
     public String getId() {
@@ -34,11 +34,11 @@ public class User {
         this.avatar = avatar;
     }
 
-    public String getCreateAt() {
-        return createAt;
+    public String getDate() {
+        return date;
     }
 
-    public void setCreateAt(String createAt) {
-        this.createAt = createAt;
+    public void setDate(String date) {
+        this.date = date;
     }
 }

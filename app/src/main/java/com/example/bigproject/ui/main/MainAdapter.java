@@ -13,16 +13,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.bigproject.R;
-import com.example.bigproject.db.database.User;
+import com.example.bigproject.db.database.ImageDetailData;
+import com.example.bigproject.db.database.ImageTotalData;
 import com.example.bigproject.ui.details.DetailsActivity;
 
 import java.util.List;
 
 public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
-    List<User> userList;
+    List<ImageTotalData> imageTotalData;
     Context context;
-    public MainAdapter(List<User> userList, Context context) {
-        this.userList = userList;
+    public MainAdapter(List<ImageTotalData> imageTotalData, Context context) {
+        this.imageTotalData = imageTotalData;
         this.context = context;
     }
 
@@ -30,17 +31,16 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_recycler_view, parent, false));
+                .inflate(R.layout.item_main, parent, false));
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
         if(holder instanceof ViewHolder) {
             final ViewHolder contactViewHolder = (ViewHolder) holder;
-            contactViewHolder.name.setText(userList.get(position).getName());
-            contactViewHolder.date.setText(userList.get(position).getCreateAt());
+            contactViewHolder.name.setText(imageTotalData.get(position).getSeaGId());
 
-            final String avatar = userList.get(position).getAvatar();
+            final String avatar = imageTotalData.get(position).getPicture();
             Glide.with(context.getApplicationContext()).load(avatar)
                     .placeholder(R.drawable.logo).into(contactViewHolder.imageView);
 
@@ -48,6 +48,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
                 @Override
                 public void onClick(View v) {
                     Intent intent = new Intent(context, DetailsActivity.class);
+                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                     context.startActivity(intent);
                 }
             });
@@ -56,7 +57,7 @@ public class MainAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
 
     @Override
     public int getItemCount() {
-        return userList.size();
+        return imageTotalData.size();
     }
     public class ViewHolder extends RecyclerView.ViewHolder {
 

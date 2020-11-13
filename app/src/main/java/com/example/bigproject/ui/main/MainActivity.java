@@ -1,55 +1,81 @@
 package com.example.bigproject.ui.main;
 
-import android.app.Dialog;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Window;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.ListAdapter;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.bigproject.R;
-import com.example.bigproject.db.database.User;
+import com.example.bigproject.db.database.ImageDetailData;
+import com.example.bigproject.db.database.ImageTotalData;
+import com.example.bigproject.db.network.ApiClient;
+import com.example.bigproject.db.network.ApiInterface;
+import com.example.bigproject.ui.details.DetailsActivity;
+import com.example.bigproject.ui.details.DetailsAdapter;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+
+
 public class MainActivity extends AppCompatActivity {
+    String TAG = "Main Activity";
     RecyclerView recyclerView;
-    List<User> userList;
+    List<ImageTotalData> imageTotalData;
     MainAdapter mainAdapter;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         Objects.requireNonNull(getSupportActionBar()).hide();
         setContentView(R.layout.activity_main);
-        database();
-        //gán Id cho recyclerview
+        onLoadData();
         recyclerView = findViewById(R.id.recyclerView);
-        //Tối ưu hoá dữ liệu trong adapter
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(new GridLayoutManager(this, 2));
-        //gán dữ liệu cho contactAdapter
-        mainAdapter = new MainAdapter(userList, this);
-        //set Adapter cho Recycler View
-        recyclerView.setAdapter(mainAdapter);
-        mainAdapter.notifyDataSetChanged();
+        Log.i(TAG, "onCreate");
     }
 
-    private void database(){
-        userList = new ArrayList<>();
-        User user = new User("01","name 1", "https://i.pinimg.com/236x/9b/f0/9c/9bf09c596a26e92400d24aba35bbbcb5--detective-conan.jpg", "createAt");
-        userList.add(user);
-        user = new User("02","name 2", "https://i.pinimg.com/236x/1f/a4/2e/1fa42e08f7fb44d97b07cfebaf0894c4.jpg", "createAt");
-        userList.add(user);
-        user = new User("03","name 3", "https://images6.fanpop.com/image/photos/39800000/Conan-conan-edogawa-39864107-300-460.jpg", "createAt");
-        userList.add(user);
-        user = new User("04","name 4", "avatar", "createAt");
-        userList.add(user);
+    public void onLoadData() {
+        imageTotalData = new ArrayList<>();
+        Retrofit retrofit = ApiClient.getApiClient();
+        ApiInterface callApi = retrofit.create(ApiInterface.class);
+        Call<List<ImageTotalData>> call = callApi.getTotalImage();
+        call.enqueue(new Callback<List<ImageTotalData>>() {
+            @Override
+            public void onResponse(@NotNull Call<List<ImageTotalData>> call, @NotNull Response<List<ImageTotalData>> response) {
+                List<ImageTotalData> imageTotalDataList = response.body();
+                String id, seaGid, picture;
+                int number_picture;
+                for (int i = 0; i < imageTotalDataList.size(); i++) {
+                    id = imageTotalDataList.get(i).getId();
+                    seaGid = imageTotalDataList.get(i).getSeaGId();
+                    picture = imageTotalDataList.get(i).getPicture();
+                    number_picture = imageTotalDataList.get(i).getNumber_picture();
+                    ImageTotalData imageTotalData = new ImageTotalData(id, seaGid,picture,number_picture);
+                    MainActivity.this.imageTotalData.add(imageTotalData);
+                    Log.i(TAG,"" + imageTotalDataList.toString() + number_picture);
+                }
+                mainAdapter = new MainAdapter(MainActivity.this.imageTotalData, getBaseContext());
+                recyclerView.setAdapter(mainAdapter);
+                mainAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onFailure(Call<List<ImageTotalData>> call, Throwable t) {
+                Log.i(TAG, "onFailure" + t.toString());
+            }
+        });
     }
 }
